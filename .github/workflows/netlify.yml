@@ -101,7 +101,7 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_TELEMETRY_DISABLED: '1'
         run: >
-          pnpm dlx --package netlify-cli@23.13.3 netlify deploy
+          pnpm --package=netlify-cli@23.13.3 dlx netlify deploy
           --build
           --prod
           --context production
