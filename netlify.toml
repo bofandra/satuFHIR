@@ -2,6 +2,11 @@
   command = "pnpm build"
   publish = "dist"
 
-[[edge_functions]]
-  function = "api"
-  path = "/api/*"
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200

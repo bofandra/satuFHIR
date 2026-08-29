@@ -100,7 +100,32 @@ FHIRCare ships small educational payload builders. SATUSEHAT implementation guid
 1. Import the repository.
 2. Add environment variables.
 3. Netlify reads `netlify.toml`.
-4. The SPA is built to `dist`; `/api/*` runs through the Hono Netlify Edge Function adapter.
+4. The SPA is built to `dist`; `/api/*` runs through the Hono Netlify Function adapter.
+
+### GitHub Actions CI/CD to Netlify
+
+This repository includes `.github/workflows/netlify.yml`.
+
+The workflow runs lint, typecheck, unit tests, build, and the Playwright smoke test for pull requests and pushes. Pushes to `main` deploy production to Netlify with `netlify deploy --build --prod`, which uploads the static build and the configured Netlify Function.
+
+Configure these GitHub Actions repository secrets:
+
+- `NETLIFY_AUTH_TOKEN` — Netlify personal access token.
+- `NETLIFY_SITE_ID` — Netlify Project ID.
+
+Configure the app runtime variables in the Netlify project environment, not in committed source:
+
+- `APP_AUTH_ENABLED`
+- `APP_USERNAME`
+- `APP_PASSWORD_HASH`
+- `AUTH_SECRET`
+- `SATUSEHAT_ENV`
+- `SATUSEHAT_CLIENT_ID`
+- `SATUSEHAT_CLIENT_SECRET`
+- `SATUSEHAT_ORGANIZATION_ID`
+- `SATUSEHAT_PRACTITIONER_ID`
+- `SATUSEHAT_LOCATION_ID`
+- `ALLOW_PRODUCTION`
 
 ### Cloudflare Pages
 
