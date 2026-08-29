@@ -28,6 +28,7 @@ FHIRCare is an open-source, zero-database educational prototype. It provides a f
 - ServiceRequest: laboratory and radiology
 - DiagnosticReport
 - Medication + MedicationRequest / Medication + MedicationDispense
+- SATUSEHAT RME Viewer CHL/SHL link generation
 - Encounter timeline reconstructed from SATUSEHAT
 - FHIR Inspector: request, response, explain, cURL
 - FHIR Explorer
@@ -50,7 +51,7 @@ git clone <your-repository-url>
 cd fhircare
 pnpm install
 cp .env.example .env
-pnpm auth:hash -- "choose-a-password"
+pnpm auth:hash "choose-a-password"
 ```
 
 Paste the generated PBKDF2 value into `APP_PASSWORD_HASH`, then configure the SATUSEHAT Sandbox credentials in `.env`.
@@ -76,9 +77,12 @@ Defaults used by the source:
 ```text
 OAuth: https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1
 FHIR:  https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1
+RME:   https://api-satusehat-stg.dto.kemkes.go.id/ssrme/v2/ntl
 ```
 
 The OAuth request is server-to-server and uses `POST /accesstoken?grant_type=client_credentials` with URL-encoded `client_id` and `client_secret`.
+
+The RME Viewer calls `POST /chl` for the consent health link and `POST /shl` for the national RME link. Configure `SATUSEHAT_RME_ORGANIZATION_ID` from the RME/CHL-SHL credential context; it may not be the same value as the FHIR `Organization/{id}` UUID used in clinical resources.
 
 ## Important note about payload templates
 
@@ -125,6 +129,11 @@ Configure the app runtime variables in the Netlify project environment, not in c
 - `SATUSEHAT_ORGANIZATION_ID`
 - `SATUSEHAT_PRACTITIONER_ID`
 - `SATUSEHAT_LOCATION_ID`
+- `SATUSEHAT_RME_ORGANIZATION_ID`
+- `SATUSEHAT_RME_ORGANIZATION_NAME`
+- `SATUSEHAT_RME_PRACTITIONER_ID`
+- `SATUSEHAT_RME_PRACTITIONER_NAME`
+- `SATUSEHAT_RME_URL`
 - `ALLOW_PRODUCTION`
 
 ### Cloudflare Pages
