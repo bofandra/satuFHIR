@@ -106,7 +106,7 @@ FHIRCare ships small educational payload builders. SATUSEHAT implementation guid
 
 This repository includes `.github/workflows/netlify.yml`.
 
-The workflow runs lint, typecheck, unit tests, build, and the Playwright smoke test for pull requests and pushes. Pushes to `main` deploy production to Netlify with `netlify deploy --build --prod`, which uploads the static build and the configured Netlify Function.
+The workflow runs lint, typecheck, unit tests, build, and the Playwright smoke test for pull requests, pushes, and manual runs. Pushes to `main` and manual runs on `main` deploy production to Netlify with `netlify deploy --build --prod`, which uploads the static build and the configured Netlify Function.
 
 Configure these GitHub Actions repository secrets:
 
