@@ -1,0 +1,15 @@
+import { Navigate,Route,Routes,useLocation } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { api } from './lib/api'
+import { AppShell } from './components/AppShell'
+import { LoginPage } from './pages/LoginPage'
+import { DashboardPage } from './pages/DashboardPage'
+import { PatientsPage } from './pages/PatientsPage'
+import { EncounterPage,EncountersPage } from './pages/EncounterPage'
+import { DiagnosticsPage } from './pages/DiagnosticsPage'
+import { MedicationPage } from './pages/MedicationPage'
+import { JourneyPage } from './pages/JourneyPage'
+import { ExplorerPage } from './pages/ExplorerPage'
+import { PlaygroundPage } from './pages/PlaygroundPage'
+function Protected(){const loc=useLocation();const q=useQuery({queryKey:['me'],queryFn:api.me,retry:false});if(q.isLoading)return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Loading FHIRCare…</div>;if(q.isError||!q.data?.authenticated)return <Navigate to="/login" replace state={{from:loc.pathname}}/>;return <AppShell/>}
+export function App(){return <Routes><Route path="/login" element={<LoginPage/>}/><Route element={<Protected/>}><Route path="/" element={<DashboardPage/>}/><Route path="/patients" element={<PatientsPage/>}/><Route path="/encounters" element={<EncountersPage/>}/><Route path="/encounters/:id" element={<EncounterPage/>}/><Route path="/diagnostics" element={<DiagnosticsPage/>}/><Route path="/medication" element={<MedicationPage/>}/><Route path="/journey" element={<JourneyPage/>}/><Route path="/explorer" element={<ExplorerPage/>}/><Route path="/playground" element={<PlaygroundPage/>}/></Route><Route path="*" element={<Navigate to="/" replace/>}/></Routes>}
