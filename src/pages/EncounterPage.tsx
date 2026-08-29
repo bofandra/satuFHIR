@@ -29,7 +29,7 @@ export function EncountersPage(){
   const load=useCallback(async()=>{
     if(!patient)return
     try{
-      const t=await api.fhir.search('Encounter',{subject:`Patient/${patient}`})
+      const t=await api.fhir.search('Encounter',{subject:patient})
       show(t)
       setItems(((t.response as FhirBundle).entry||[]).map(e=>e.resource!).filter(Boolean))
     }catch(e:any){

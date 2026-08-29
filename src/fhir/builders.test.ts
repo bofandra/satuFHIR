@@ -5,7 +5,19 @@ describe('FHIR payload builders', () => {
   it('builds an Encounter linked to patient, practitioner, location, and organization', () => {
     const r = encounterResource({ org: 'ORG1', patient: 'PAT1', practitioner: 'PR1', location: 'LOC1' }) as any
     expect(r.resourceType).toBe('Encounter')
+    expect(r.identifier[0].use).toBe('official')
+    expect(r.status).toBe('arrived')
+    expect(r.statusHistory[0]).toEqual({
+      status: 'arrived',
+      period: { start: expect.any(String), end: expect.any(String) },
+    })
+    expect(r.statusHistory[0].period.end).toBe(r.statusHistory[0].period.start)
     expect(r.subject.reference).toBe('Patient/PAT1')
+    expect(r.participant[0].type[0].coding[0]).toEqual({
+      system: 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
+      code: 'ATND',
+      display: 'attender',
+    })
     expect(r.participant[0].individual.reference).toBe('Practitioner/PR1')
     expect(r.location[0].location.reference).toBe('Location/LOC1')
     expect(r.serviceProvider.reference).toBe('Organization/ORG1')
