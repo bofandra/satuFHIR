@@ -37,7 +37,7 @@ export function RmeViewerPage(){
   const queryPatientName=sp.get('patientName')||''
 
   useEffect(()=>{setForm(f=>({...f,patient_id:queryPatientId||f.patient_id,patient_name:queryPatientName||f.patient_name}))},[queryPatientId,queryPatientName])
-  useEffect(()=>{if(cfg.data)setForm(f=>({...f,practitioner_id:f.practitioner_id||cfg.data.rmePractitionerId||'',practitioner_name:f.practitioner_name||cfg.data.rmePractitionerName||'',organization_id:f.organization_id||cfg.data.rmeOrganizationId||'',organization_name:f.organization_name||cfg.data.rmeOrganizationName||''}))},[cfg.data])
+  useEffect(()=>{if(cfg.data)setForm(f=>({...f,practitioner_id:f.practitioner_id||cfg.data.practitionerId||'',practitioner_name:f.practitioner_name||cfg.data.practitionerName||'',organization_id:f.organization_id||cfg.data.organizationId||'',organization_name:f.organization_name||cfg.data.organizationName||''}))},[cfg.data])
 
   const ready=Object.values(form).every(v=>v.trim())
   async function generate(kind:RmeLinkKind){

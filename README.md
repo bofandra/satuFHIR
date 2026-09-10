@@ -9,9 +9,9 @@ FHIRCare is an open-source, zero-database educational prototype. It provides a f
 ## Core principles
 
 - **Zero database** — SATUSEHAT is the clinical source of truth.
-- **Stateless backend** — Hono only handles app auth, SATUSEHAT OAuth and an allowlisted FHIR gateway.
+- **Stateless backend** — Hono handles app auth, encrypted runtime SATUSEHAT settings, SATUSEHAT OAuth and an allowlisted FHIR gateway.
 - **FHIR visible by design** — every clinical action can be inspected.
-- **Sandbox first** — production access is blocked unless `ALLOW_PRODUCTION=true` is explicitly configured.
+- **Sandbox first** — `SATUSEHAT_ENV` defaults to sandbox and must be explicitly changed to production in Settings.
 - **No PHI persistence** — learning progress may use localStorage; clinical resources may not.
 
 ## Included MVP
@@ -54,7 +54,7 @@ cp .env.example .env
 pnpm auth:hash "choose-a-password"
 ```
 
-Paste the generated PBKDF2 value into `APP_PASSWORD_HASH`, then configure the SATUSEHAT Sandbox credentials in `.env`.
+Paste the generated PBKDF2 value into `APP_PASSWORD_HASH`. SATUSEHAT credentials are entered later in the app Settings page.
 
 ```bash
 pnpm dev
@@ -82,7 +82,7 @@ RME:   https://api-satusehat-stg.dto.kemkes.go.id/ssrme/v2/ntl
 
 The OAuth request is server-to-server and uses `POST /accesstoken?grant_type=client_credentials` with URL-encoded `client_id` and `client_secret`.
 
-The RME Viewer calls `POST /chl` for the consent health link and `POST /shl` for the national RME link. Configure `SATUSEHAT_RME_ORGANIZATION_ID` from the RME/CHL-SHL credential context; it may not be the same value as the FHIR `Organization/{id}` UUID used in clinical resources.
+The RME Viewer calls `POST /chl` for the consent health link and `POST /shl` for the national RME link. It uses the configured `SATUSEHAT_ORGANIZATION_ID` and `SATUSEHAT_PRACTITIONER_ID` from Settings.
 
 ## Important note about payload templates
 
@@ -93,7 +93,7 @@ FHIRCare ships small educational payload builders. SATUSEHAT implementation guid
 ### Vercel
 
 1. Import the GitHub repository.
-2. Add all variables from `.env.example` in Project Settings → Environment Variables.
+2. Add the app auth variables from `.env.example` in Project Settings → Environment Variables.
 3. Build command: `pnpm build`.
 4. Deploy.
 
@@ -102,7 +102,7 @@ FHIRCare ships small educational payload builders. SATUSEHAT implementation guid
 ### Netlify
 
 1. Import the repository.
-2. Add environment variables.
+2. Add the app auth environment variables.
 3. Netlify reads `netlify.toml`.
 4. The SPA is built to `dist`; `/api/*` runs through the Hono Netlify Function adapter.
 
@@ -117,31 +117,21 @@ Configure these GitHub Actions repository secrets:
 - `NETLIFY_AUTH_TOKEN` — Netlify personal access token.
 - `NETLIFY_SITE_ID` — Netlify Project ID.
 
-Configure the app runtime variables in the Netlify project environment, not in committed source:
+Configure only the app auth variables in the Netlify project environment, not in committed source:
 
 - `APP_AUTH_ENABLED`
 - `APP_USERNAME`
 - `APP_PASSWORD_HASH`
 - `AUTH_SECRET`
-- `SATUSEHAT_ENV`
-- `SATUSEHAT_CLIENT_ID`
-- `SATUSEHAT_CLIENT_SECRET`
-- `SATUSEHAT_ORGANIZATION_ID`
-- `SATUSEHAT_PRACTITIONER_ID`
-- `SATUSEHAT_LOCATION_ID`
-- `SATUSEHAT_RME_ORGANIZATION_ID`
-- `SATUSEHAT_RME_ORGANIZATION_NAME`
-- `SATUSEHAT_RME_PRACTITIONER_ID`
-- `SATUSEHAT_RME_PRACTITIONER_NAME`
-- `SATUSEHAT_RME_URL`
-- `ALLOW_PRODUCTION`
+
+SATUSEHAT settings are saved from the app Settings page into an encrypted HttpOnly cookie. The app does not return the Client ID or Client Secret back to the browser after saving. `AUTH_SECRET` must be at least 32 characters because it signs the login cookie and encrypts the SATUSEHAT settings cookie.
 
 ### Cloudflare Pages
 
 1. Create a Pages project from this repository.
 2. Build command: `pnpm build`.
 3. Output directory: `dist`.
-4. Add the environment variables in Pages settings.
+4. Add the app auth environment variables in Pages settings.
 5. `functions/api/[[path]].ts` forwards `/api/*` to the shared Hono app.
 
 ## Authentication model

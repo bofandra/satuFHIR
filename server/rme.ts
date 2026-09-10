@@ -39,5 +39,5 @@ export async function rmeLink(c:Context,kind:RmeLinkKind,input:RmeViewerInput){
   const started=Date.now()
   const res=await fetch(`${cfg.rmeUrl.replace(/\/$/,'')}${path}`,{method:'POST',headers:{Authorization:`Bearer ${access}`,Accept:'application/json','Content-Type':'application/json'},body:JSON.stringify(request)})
   const response=safeJson(await res.text())
-  return {ok:res.ok,status:res.status,method:'POST',path,elapsedMs:Date.now()-started,request,response,service:'RME Viewer',baseEnvVar:'$SATUSEHAT_RME_URL',url:extractRmeUrl(kind,response)}
+  return {ok:res.ok,status:res.status,method:'POST',path,elapsedMs:Date.now()-started,request,response,service:'RME Viewer',baseUrl:cfg.rmeUrl.replace(/\/$/,''),url:extractRmeUrl(kind,response)}
 }

@@ -1,7 +1,13 @@
 export type FhirResource={resourceType:string;id?:string;[key:string]:unknown}
 export type FhirBundle=FhirResource&{resourceType:'Bundle';entry?:Array<{resource?:FhirResource}>}
-export type ApiTrace={ok:boolean;status:number;method:string;path:string;elapsedMs:number;request?:unknown;response:unknown;service?:string;baseEnvVar?:string}
+export type ApiTrace={ok:boolean;status:number;method:string;path:string;elapsedMs:number;request?:unknown;response:unknown;service?:string;baseEnvVar?:string;baseUrl?:string}
 export type RmeLinkKind='chl'|'chl-emergency'|'shl'
 export type RmeViewerInput={patient_id:string;patient_name:string;practitioner_id:string;practitioner_name:string;organization_id:string;organization_name:string}
 export type RmeLinkTrace=ApiTrace&{url?:string}
-export type AppConfig={environment:'sandbox'|'production';organizationId?:string;practitionerId?:string;locationId?:string;rmeOrganizationId?:string;rmeOrganizationName?:string;rmePractitionerId?:string;rmePractitionerName?:string;authEnabled:boolean}
+export type SatusehatEnvironment='sandbox'|'production'
+export type AppConfig={environment:SatusehatEnvironment;organizationId?:string;organizationName?:string;practitionerId?:string;practitionerName?:string;locationId?:string;rmeOrganizationId?:string;rmeOrganizationName?:string;rmePractitionerId?:string;rmePractitionerName?:string;rmeUrl:string;clientIdConfigured:boolean;clientSecretConfigured:boolean;authEnabled:boolean}
+export type SettingsUpdate={environment?:SatusehatEnvironment;clientId?:string;clientSecret?:string;organizationId?:string;organizationName?:string;practitionerId?:string;practitionerName?:string;locationId?:string;rmeUrl?:string}
+export type PractitionerLookup={searchTrace:ApiTrace;readTrace?:ApiTrace;practitionerId?:string;practitionerName?:string}
+export type OrganizationLookup={trace:ApiTrace;organizationId:string;organizationName?:string}
+export type LocationOption={id:string;name?:string;status?:string;physicalType?:string}
+export type LocationLookup={trace:ApiTrace;organizationId:string;locations:LocationOption[]}

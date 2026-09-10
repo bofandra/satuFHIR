@@ -3,7 +3,7 @@
 1. Never expose SATUSEHAT Client ID or Client Secret to the browser.
 2. Never commit credentials or real patient data.
 3. Never persist clinical FHIR resources in a local database, browser storage, analytics tool, or log.
-4. SATUSEHAT Sandbox is the default and production is explicitly gated by `ALLOW_PRODUCTION=true`.
+4. SATUSEHAT Sandbox is the default and production is explicitly selected through `SATUSEHAT_ENV`.
 5. Every clinical action should make its FHIR interaction inspectable: request, response, HTTP status, references, cURL, explanation.
 6. Keep the backend stateless. In-memory OAuth token caching is allowed.
 7. Only non-clinical learning progress/preferences may use `localStorage`.
